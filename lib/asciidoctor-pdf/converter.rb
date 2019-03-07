@@ -2140,7 +2140,10 @@ class Converter < ::Prawn::Document
       if is_tag
         quoted_text = %(#{open.chop} class="#{role}">#{node.text}#{close})
       else
-        quoted_text = %(<span class="#{role}">#{open}#{node.text}#{close}</span>)
+        style = add_style style, role, 'font-style', 'font_style'
+  style = add_style style, role, 'font-size', 'font_size'
+  style = add_style style, role, 'color', 'font_color'
+  quoted_text = %(<span style="#{style}">#{open}#{node.text}#{close}</span>)
       end
     else
       quoted_text = %(#{open}#{node.text}#{close})
@@ -3254,6 +3257,17 @@ class Converter < ::Prawn::Document
     end
   end
 
+  def add_style (style, role, styleName, *themeName)
+    themeName = themeName ? themeName.first : styleName
+    value = eval %(@theme.#{role}_#{themeName})
+    if value
+       if style
+         style = %(#{style};)
+       end
+       style = %(#{style}#{styleName}:#{value})
+    end
+    return style
+  end
   # Resolve the system path of the specified image path.
   #
   # Resolve and normalize the absolute system path of the specified image,
