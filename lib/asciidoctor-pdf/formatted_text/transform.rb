@@ -222,6 +222,11 @@ class Transform
             #  fragment[:color] = pvalue.slice(1, 3).each_char.map {|c| c * 2 }.join if pvalue.start_with?('#')
             end
           end
+        
+        when 'font-size'
+          unless fragment[:size]
+            fragment[:size] = pvalue
+          end
         when 'font-weight'
           if pvalue == 'bold'
             styles << :bold
